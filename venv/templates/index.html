@@ -1,9 +1,37 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
 
 
-<script type="text/javascript" charset="utf-8">
-    var socket = io();
-    socket.on('connect', function() {
-        socket.send(data = 'Conectado');
-    });
-</script>
+<body>
+    <div class="chat">
+        <span>
+
+        </span>
+    </div>
+    <form>
+        <input type="text">
+        <button type="submit">Enviar</button>
+    </form>
+
+    <script type="text/javascript" charset="utf-8">
+        var socket = io();
+        socket.on('connect', function () {
+            socket.emit('status', { data: 'Conectado!' });
+
+            document.querySelector("form").addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                socket.emit('enviarmsg', { mensagem: event.target[0].value })
+                event.target[0].value = ''
+            });
+
+            socket.on('enviarmsg', (msg) => {
+                var span = document.createElement("span");
+                var chat = document.querySelector("span");
+                span.innerHTML = `<strong>${msg.mensagem}</strong> <br>`;
+                chat.append(span);
+            })
+
+        })
+
+    </script>
+</body>

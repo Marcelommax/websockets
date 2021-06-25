@@ -1,5 +1,6 @@
 from flask import Flask, render_template
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, emit
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -10,10 +11,14 @@ socketio = SocketIO(app)
 def index():
     return render_template('index.html')
 
-@socketio.on('message')
+@socketio.on('status')
 def handle_message(data):
-    print('Status da conexão: ' + data) 
+    print(data) 
+
+@socketio.on('enviarmsg')
+def send_handle_message(msg):
+    emit('enviarmsg', msg)
 
 
 if __name__ == '__main__':
-    socketio.run(app)
+    socketio.run(app, debug=True)
