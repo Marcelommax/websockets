@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, send
 
 
 app = Flask(__name__)
@@ -12,12 +12,12 @@ def index():
     return render_template('index.html')
 
 @socketio.on('status')
-def handle_message(data):
-    print(data) 
+def statusConexao(data):
+    print('status', data) 
 
 @socketio.on('enviarmsg')
-def send_handle_message(msg):
-    emit('enviarmsg', msg)
+def postmsg(msg):
+    emit('enviarmsg', msg, broadcast=True)
 
 
 if __name__ == '__main__':
