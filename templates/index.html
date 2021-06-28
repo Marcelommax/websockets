@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaxZap</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+</head>
+
+<body>
+    <div class="chat">
+        <span>
+
+        </span>
+    </div>
+    <form>
+        <input type="text">
+        <input type="text">
+        <button type="submit">Enviar</button>
+    </form>
+
+    <script type="text/javascript" charset="utf-8">
+        var socket = io();
+        socket.on('connect', function () {
+            socket.emit('status', { data: 'Conectado!' });
+
+            document.querySelector("form").addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                socket.emit('enviarmsg', {nome: event.target[0].value, mensagem: event.target[1].value })
+                event.target[1].value = ''
+            });
+
+            socket.on('enviarmsg', (msg) => {
+                var span = document.createElement("span");
+                var chat = document.querySelector("span");
+                span.innerHTML = `<strong>${msg.nome}:</strong> ${msg.mensagem} <br>`;
+                chat.append(span);
+            })
+
+        })
+
+    </script>
+</body>
+
+</html>
